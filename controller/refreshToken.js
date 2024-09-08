@@ -1,17 +1,19 @@
 import User from '..//model/UserModel.js'
 import jwt from "jsonwebtoken";
 export const handleRefreshToken = async (req, res) => {
-  const cookies = req.cookies
-    if (!cookies?.jwt) return res.status(401)
-    const refreshToken = cookies.jwt
+  try {
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.status(401);
+    let refreshToken = cookies.jwt;
     // find users exists
-  const FoundUser = await User.findOne({ refreshToken }).exec()
-    if (!FoundUser )return res.status(403);
+    const FoundUser = await User.findOne({
+      refreshToken: `${refreshToken}`,
+    }).exec();
+    if (!FoundUser) return res.status(403);
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       (err, decoded) => {
-        console.log(decoded);
         if (err || FoundUser.email !== decoded.email)
           return res.sendStatus(403);
         const roles = Object.values(FoundUser.roles);
@@ -25,4 +27,7 @@ export const handleRefreshToken = async (req, res) => {
         res.json({ accessToken });
       }
     );
+  } catch (err) {
+    res.json({ Message: err });
+  }
 };

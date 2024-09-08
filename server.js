@@ -15,12 +15,17 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const Port = process.env.PORT || 8080;
+import { credentials } from "./Middleware/credential.js";
 import { getUser } from "./controller/UserControllers.js";
 import { VerifyRoles } from "./Middleware/VerifyRoles.js";
 import { Roles_list } from "./config/role_list.js";
 import { handleRefreshToken } from "./controller/refreshToken.js";
+import { corsOptions } from "./config/corOptions.js";
 // Middleware
-app.use(cors());
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookiParser());
@@ -29,8 +34,6 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routes
 app.use("/refresh", RefreshToken);
 app.use("/user", users);
-app.use(verifyJWT)
-app.get("/getuser", VerifyRoles(Roles_list.user), getUser);
 // Database Connection
 ConnectDB(); // Call function to connect to MongoDB using Mongoose
 mongoose.connection.once("open", () => {

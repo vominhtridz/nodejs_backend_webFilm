@@ -10,9 +10,10 @@ import { Roles_list } from "../config/role_list.js";
 const Router = express.Router();
 // ------------ GET USER----------------
 Router.post("/register", RegisterUser);
-Router.get("/", getUser);
+Router.get("/:id", verifyJWT, getUser);
+Router.put("/edit/:id", verifyJWT, EditUser);
 Router.post("/login", authUser);
-Router.get("/logout", handleLogout);
+Router.post("/logout", handleLogout);
 
 
 export default Router;

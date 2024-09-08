@@ -15,8 +15,15 @@ export const RegisterUser =async (req, res) => {
   if (duplicateEmail) return res.status(409).json({ Message: "Email Đã được đăng kí!" });
   try {
     // Add new user to the database
+    const username = email.split("@")[0];
+    console.log(username);
     const hashPwd = await bcrypt.hash(pwd, 10);
-    const newUser = await User.create({ email: email, password: hashPwd });
+    const newUser = await User.create({
+      email: email,
+      password: hashPwd,
+      username,
+    });
+    
     console.log(newUser)
     res.status(201).json({ Message: "Đăng kí thành công!" });
   } catch (err) {
