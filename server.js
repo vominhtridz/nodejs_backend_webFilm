@@ -6,20 +6,15 @@ import cookiParser from 'cookie-parser'
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import users from "./routes/users.js";
-import { verifyJWT } from "./Middleware/VerifyJwt.js";
 import { fileURLToPath } from "url"; // ES Modules: to get the directory name
 import ConnectDB from "./config/connectMgoDb.js";
-import RefreshToken from './routes/RefreshToken.js'
+import RefreshToken from "./routes/RefreshToken.js";
 dotenv.config(); // Ensure this is at the top
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const Port = process.env.PORT || 8080;
 import { credentials } from "./Middleware/credential.js";
-import { getUser } from "./controller/UserControllers.js";
-import { VerifyRoles } from "./Middleware/VerifyRoles.js";
-import { Roles_list } from "./config/role_list.js";
-import { handleRefreshToken } from "./controller/refreshToken.js";
 import { corsOptions } from "./config/corOptions.js";
 // Middleware
 // Handle options credentials check - before CORS!
